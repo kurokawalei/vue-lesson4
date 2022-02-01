@@ -73,8 +73,7 @@ const app = createApp({
 
           this.products = res.data.products;
           this.pagination = res.data.pagination;
-
-          console.log(this.pagination)
+      
 
 
         })
@@ -96,7 +95,7 @@ const app = createApp({
 
         //淺拷貝
         this.tempProduct = { ...item };
-        console.log(item);
+        
 
         this.states = false;
         productModal.show();
