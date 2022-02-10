@@ -1,5 +1,5 @@
 
-export default {
+export const pageinfo = {
 
   props: ['pages'],
  

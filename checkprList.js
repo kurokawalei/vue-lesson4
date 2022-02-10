@@ -1,6 +1,8 @@
 import { createApp } from 'https://cdnjs.cloudflare.com/ajax/libs/vue/3.2.26/vue.esm-browser.min.js';
 
-import pageinfo  from './page.js';
+import { pageinfo }  from './components/page.js';
+
+import { xproductModal, delproductModal } from './components/modal.js'; // 匯入 modal 元件(具名匯出)
 
 
 let productModal = null;
@@ -34,11 +36,11 @@ const app = createApp({
 
       axios.post(`${this.apiurl}/v2/api/user/check`)
         .then((res) => {
-          console.log('認證成功');
+          //console.log('認證成功');
           this.getlist();
         })
         .catch((err) => {
-          console.log('認證失敗');
+          //console.log('認證失敗');
           window.location = 'index.html';
 
         })
@@ -115,6 +117,13 @@ const app = createApp({
      
     },
 
+    closeProductModal() { // 關閉新增、編輯產品 modal
+      productModal.hide();
+    },
+    closeDeleteProductModal() { // 關閉刪除產品 modal
+      delModal.hide();
+    }
+
    
 
    
@@ -126,7 +135,9 @@ const app = createApp({
   },
 
   components:{
-    pageinfo
+    pageinfo,
+    xproductModal,
+    delproductModal
   },
  
 
@@ -157,140 +168,6 @@ const app = createApp({
 
 
 });
-
-
-//放元件
-// 分頁元件
-
-
-app.component( 'productModal'  , {
-
-  data(){
-    return {
-    
-      apiurl: 'https://vue3-course-api.hexschool.io',
-      path: 'kurokawa2021',
-    }
-  },
-
-  template:'#x-productModal',
-  props:['tempProduct','states'],
-  methods:{
-    updataPr() {
-
-      //新增
-
-      if (this.states) {
-
-        let url = `${ this.apiurl }/v2/api/${this.path}/admin/product`;
-      
-        axios.post( url ,  { data: this.tempProduct } )
-        .then( (res) => {
-        alert(res.data.message);
-        productModal.hide();
-  
-
-        this.$emit( 'getlist'  );
-
-
-        //更新渲染
-       // this.getlist();
-  
-        
-  
-        })
-        .catch( (res) => {
-          console.log( res.data );
-        });
-        
-      }
-
-
-      //修改
-
-      if (!this.states) {
-
-        let url = `${this.apiurl}/v2/api/${this.path}/admin/product/${this.tempProduct.id}` ;
-
-      //  https://vue3-course-api.hexschool.io/v2/api/kurokawa2021/admin/product/-MuENTXmQ9YbvCmYgORh
-      
-        axios.put( url ,  { data: this.tempProduct }  )
-        .then(  (res) => {
-
-          alert(res.data.message);
-          productModal.hide();
-           //更新渲染
-           this.$emit( 'getlist'  )
-         //  this.getlist();
-        } )
-        .catch( (er) => {
-          console.log(er.data)
-        })
-
-
-      }
-
-
-    
-     
-    },
-    createImages() {
-      this.tempProduct.imagesUrl = [];
-      this.tempProduct.imagesUrl.push('');
-    },
-
-  },
- 
-
-
-});
-
-
-
-app.component( 'delProductModal' , {
-
-  data(){
-    return {
-    
-      apiurl: 'https://vue3-course-api.hexschool.io',
-      path: 'kurokawa2021',
-    }
-  },
-
-template:'#del-productModal',
-props:['tempProduct'],
-methods:{
-  delPr(){
-
-    //刪除產品
-    // https://vue3-course-api.hexschool.io/v2/api/{api_path}/admin/product/{id}
-
-
-    axios.delete(`${this.apiurl}/v2/api/${this.path}/admin/product/${this.tempProduct.id}`)
-    .then( (res) => {
-
-      alert(res.data.message);
-      delModal.hide();
-
-      //更新渲染
-     // this.getlist();
-
-     this.$emit('getlist');
-
-
-
-    } )
-    .catch(  (er) => {
-      console.log(er.data.messgae)
-    } )
-
-  },
-}
-
-});
-
-
-
 
 
 
